@@ -31,6 +31,7 @@ jobs:
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
+      - run:  echo IMAGE_TAG=$(${{ github.event.inputs.release_name == 'stable' && '' || format('.{0}', github.event.inputs.release_name) }}) >> $GITHUB_ENV
       - name: Build and push Docker images
         uses: docker/build-push-action@v2.9.0
         with:
@@ -38,8 +39,8 @@ jobs:
           file: Dockerfile
           push: true
           tags: |
-            ghcr.io/${{ env.IMAGE_OWNER }}/${{ env.IMAGE_NAME }}:${{ github.event.inputs.version }}${{ github.event.inputs.release_name == 'stable' && '' || format('-{0}', github.event.inputs.release_name) }}
-            ${{ secrets.DOCKERHUB_USERNAME }}/${{ env.IMAGE_NAME }}:${{ github.event.inputs.version }}${{ github.event.inputs.release_name == 'stable' && '' || format('-{0}', github.event.inputs.release_name) }}
+            ghcr.io/${{ env.IMAGE_OWNER }}/${{ env.IMAGE_NAME }}:${{ github.event.inputs.version }}{{ env.IMAGE_TAG }}
+            ${{ secrets.DOCKERHUB_USERNAME }}/${{ env.IMAGE_NAME }}:${{ github.event.inputs.version }}{{ env.IMAGE_TAG }}
           build-args: |
             GODOT_VERSION=${{ github.event.inputs.version }}
             RELEASE_NAME=${{ github.event.inputs.release_name }}
@@ -61,6 +62,7 @@ jobs:
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
+      - run:  echo IMAGE_TAG=$(${{ github.event.inputs.release_name == 'stable' && '' || format('.{0}', github.event.inputs.release_name) }}) >> $GITHUB_ENV
       - name: Build and push Docker images
         uses: docker/build-push-action@v2.9.0
         with:
@@ -68,8 +70,8 @@ jobs:
           file: mono.Dockerfile
           push: true
           tags: |
-            ghcr.io/${{ env.IMAGE_OWNER }}/${{ env.IMAGE_NAME }}:mono-${{ github.event.inputs.version }}${{ github.event.inputs.release_name == 'stable' && '' || format('-{0}', github.event.inputs.release_name) }}
-            ${{ secrets.DOCKERHUB_USERNAME }}/${{ env.IMAGE_NAME }}:mono-${{ github.event.inputs.version }}${{ github.event.inputs.release_name == 'stable' && '' || format('-{0}', github.event.inputs.release_name) }}
+            ghcr.io/${{ env.IMAGE_OWNER }}/${{ env.IMAGE_NAME }}:mono-${{ github.event.inputs.version }}{{ env.IMAGE_TAG }}
+            ${{ secrets.DOCKERHUB_USERNAME }}/${{ env.IMAGE_NAME }}:mono-${{ github.event.inputs.version }}{{ env.IMAGE_TAG }}
           build-args: |
             GODOT_VERSION=${{ github.event.inputs.version }}
             RELEASE_NAME=${{ github.event.inputs.release_name }}
