@@ -38,10 +38,8 @@ jobs:
           file: Dockerfile
           push: true
           tags: |
-            ghcr.io/${{ env.IMAGE_OWNER }}/${{ env.IMAGE_NAME }}:${{ github.event.inputs.version }}
-            ghcr.io/${{ env.IMAGE_OWNER }}/${{ env.IMAGE_NAME }}:latest
-            ${{ secrets.DOCKERHUB_USERNAME }}/${{ env.IMAGE_NAME }}:latest
-            ${{ secrets.DOCKERHUB_USERNAME }}/${{ env.IMAGE_NAME }}:${{ github.event.inputs.version }}
+            ghcr.io/${{ env.IMAGE_OWNER }}/${{ env.IMAGE_NAME }}:${{ github.event.inputs.version }}${{ github.event.inputs.release_name == 'stable' && '' || format('-{0}', github.event.inputs.release_name) }}
+            ${{ secrets.DOCKERHUB_USERNAME }}/${{ env.IMAGE_NAME }}:${{ github.event.inputs.version }}${{ github.event.inputs.release_name == 'stable' && '' || format('-{0}', github.event.inputs.release_name) }}
           build-args: |
             GODOT_VERSION=${{ github.event.inputs.version }}
             RELEASE_NAME=${{ github.event.inputs.release_name }}
@@ -70,10 +68,8 @@ jobs:
           file: mono.Dockerfile
           push: true
           tags: |
-            ghcr.io/${{ env.IMAGE_OWNER }}/${{ env.IMAGE_NAME }}:mono-${{ github.event.inputs.version }}
-            ghcr.io/${{ env.IMAGE_OWNER }}/${{ env.IMAGE_NAME }}:mono-latest
-            ${{ secrets.DOCKERHUB_USERNAME }}/${{ env.IMAGE_NAME }}:mono-latest
-            ${{ secrets.DOCKERHUB_USERNAME }}/${{ env.IMAGE_NAME }}:mono-${{ github.event.inputs.version }}
+            ghcr.io/${{ env.IMAGE_OWNER }}/${{ env.IMAGE_NAME }}:mono-${{ github.event.inputs.version }}${{ github.event.inputs.release_name == 'stable' && '' || format('-{0}', github.event.inputs.release_name) }}
+            ${{ secrets.DOCKERHUB_USERNAME }}/${{ env.IMAGE_NAME }}:mono-${{ github.event.inputs.version }}${{ github.event.inputs.release_name == 'stable' && '' || format('-{0}', github.event.inputs.release_name) }}
           build-args: |
             GODOT_VERSION=${{ github.event.inputs.version }}
             RELEASE_NAME=${{ github.event.inputs.release_name }}
